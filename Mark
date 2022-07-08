@@ -1,0 +1,59 @@
+#include <iostream>
+#include <cstring>
+#include <vector>
+#include <set>
+#include <map>
+#define int long long
+using namespace std;
+
+vector<int> H1, H2;
+int M = 1e9 + 7, P = 65537;
+
+int binpow(int a, int p){
+    if(p == 1)
+        return a;
+    if(p == 0)
+        return 1;
+    int t = binpow(a, p / 2) % M;
+    if(p % 2 == 0)
+        return (t * t) % M;
+    return (((t * t) % M) * a) % M;
+}
+
+int f(string s, vector<int>& h){
+    int n = s.size();
+    h.resize(n + 1);
+    h[0] = 0;
+    for(int i = 1; i <= n; i++){
+        h[i] = (((h[i-1] * P) % M) + s[i - 1]) % M;
+
+    }
+}
+
+int subhash(int pos, int len, vector<int>& H){
+    int Hash = ((H[pos + len] - (binpow(P, len) % M) * H[pos]) % M + M) % M;
+    return Hash;
+}
+
+signed main()
+{
+    string s1, s2;
+    cin >> s1 >> s2;
+    f(s1, H1);
+    f(s2, H2);
+    int n = s1.size(), m = s2.size();
+    vector<int> ans;
+    int h = H2[s2.size()];
+    for(int i = 0; i < n - m + 1; i++){
+        if(h == subhash(i, m, H1)){
+            ans.push_back(i);
+        }
+    }
+    cout << ans.size() << "\n";
+    for(int i = 0; i < ans.size(); i++)
+        cout << ans[i] << " ";
+
+
+
+
+}
